@@ -2,30 +2,160 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Drukarnia u Antka</title>
+<title>Sklep u Antka</title>
+
+<style>
+/* ======== ŁADNY SKLEP CSS ======== */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 20px;
+}
+
+.logo {
+    width: 180px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.products {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    background: white;
+    width: 220px;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+.product-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.product-card button {
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.product-card button:hover {
+    background: #0056b3;
+}
+
+.item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.item-price {
+    color: #444;
+    margin-top: 5px;
+}
+
+.remove-btn {
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-btn:hover {
+    background: #e60000;
+}
+
+.empty {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 40px;
+    color: #666;
+}
+
+.cart-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    font-size: 24px;
+    text-decoration: none;
+}
+</style>
 </head>
 <body>
 
-<img src="logo.png" width="200">
+<!-- ======== LOGO ======== -->
+<img src="logo.png" class="logo">
 
-<h1>Sklep Drukarnia u Antka</h1>
+<!-- ======== TU WKŁADASZ TREŚĆ STRONY (główna / produkt / koszyk) ======== -->
+<div id="content">
+    <!-- PRZYKŁAD STRONY GŁÓWNEJ -->
+    <h1>Sklep Drukarnia u Antka</h1>
 
-<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP1/">
-    <img src="p1.jpg" width="200">
-</a>
+    <div class="products">
+        <a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP1/">
+            <div class="product-card">
+                <img src="p1.jpg">
+                <p>Kostka 3D</p>
+            </div>
+        </a>
 
-<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP2/">
-    <img src="p2.jpg" width="200">
-</a>
+        <a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP2/">
+            <div class="product-card">
+                <img src="p2.jpg">
+                <p>Figurka 3D</p>
+            </div>
+        </a>
+    </div>
 
-<br><br>
+    <a class="cart-btn" href="https://dlaelektroant-dot.github.io/DrukarniaUantkaK/">🛒</a>
+</div>
 
-<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaK/">🛒 Koszyk</a>
-
+<!-- ======== FIREBASE + KOSZYK ======== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* ======== FIREBASE CONFIG ======== */
 const firebaseConfig = {
   apiKey: "AIzaSyCh1XEeQ_ph_CSYUAOqpn-xqsMOvs7dH18",
   authDomain: "drukarnia-u-antka.firebaseapp.com",
@@ -38,6 +168,63 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+/* ======== UNIKALNY KOSZYK DLA KAŻDEGO UŻYTKOWNIKA ======== */
+let deviceId = localStorage.getItem("deviceId");
+if (!deviceId) {
+    deviceId = "dev_" + Math.random().toString(36).substring(2);
+    localStorage.setItem("deviceId", deviceId);
+}
+
+/* ======== FUNKCJE KOSZYKA ======== */
+
+async function pobierzKoszyk() {
+    const ref = doc(db, "koszyki", deviceId);
+    const snap = await getDoc(ref);
+    return snap.exists() ? snap.data().items : [];
+}
+
+async function zapiszKoszyk(items) {
+    const ref = doc(db, "koszyki", deviceId);
+    await setDoc(ref, { items });
+}
+
+window.dodajDoKoszyka = async function(nazwa, cena) {
+    const koszyk = await pobierzKoszyk();
+    koszyk.push({ nazwa, cena });
+    await zapiszKoszyk(koszyk);
+    alert("Dodano do koszyka!");
+};
+
+window.wyswietlKoszyk = async function() {
+    const koszyk = await pobierzKoszyk();
+    const div = document.getElementById("content");
+
+    if (koszyk.length === 0) {
+        div.innerHTML = `<div class="empty">Koszyk jest pusty</div>`;
+        return;
+    }
+
+    div.innerHTML = `
+        <h1>Twój koszyk</h1>
+        ${koszyk.map((p, i) => `
+            <div class="item">
+                <div>
+                    <div class="item-name">${p.nazwa}</div>
+                    <div class="item-price">${p.cena} zł</div>
+                </div>
+                <button class="remove-btn" onclick="usun(${i})">Usuń</button>
+            </div>
+        `).join("")}
+    `;
+};
+
+window.usun = async function(i) {
+    const koszyk = await pobierzKoszyk();
+    koszyk.splice(i, 1);
+    await zapiszKoszyk(koszyk);
+    location.reload();
+};
 </script>
 
 </body>
