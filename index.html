@@ -1,55 +1,44 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>drukarnia u Antma</title>
-
-    <style>
-        body {
-            background-color: gray; /* SZARE TŁO BO MA BYĆ BRZYDKO */
-            font-family: Arial;
-        }
-
-        button {
-            margin: 5px;
-            padding: 10px;
-            background: lightgray;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Drukarnia u Antka</title>
 </head>
 <body>
 
-    <h1>.</h1>
+<img src="logo.png" width="200">
 
-    <p></p>
+<h1>Sklep Drukarnia u Antka</h1>
 
-    <hr>
+<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP1/">
+    <img src="p1.jpg" width="200">
+</a>
 
-    <!-- PRZYCISKI (NA RAZIE NIC NIE ROBIĄ) -->
-    <button>---</button>
-    <button>---</button>
+<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaP2/">
+    <img src="p2.jpg" width="200">
+</a>
 
-    <hr>
+<br><br>
 
-    <!-- JAK DODAĆ ZDJĘCIE -->
-    <!-- <img src="link_do_zdjecia.jpg"> -->
+<a href="https://dlaelektroant-dot.github.io/DrukarniaUantkaK/">🛒 Koszyk</a>
 
-    <!-- JAK DODAĆ LINK -->
-    <!-- <a href="https://example.com">Kliknij tutaj</a> -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    <!-- JAK DODAĆ FILM Z YOUTUBE -->
-    
+const firebaseConfig = {
+  apiKey: "AIzaSyCh1XEeQ_ph_CSYUAOqpn-xqsMOvs7dH18",
+  authDomain: "drukarnia-u-antka.firebaseapp.com",
+  projectId: "drukarnia-u-antka",
+  storageBucket: "drukarnia-u-antka.firebasestorage.app",
+  messagingSenderId: "873634293320",
+  appId: "1:873634293320:web:4e30a02a2358d7c99a1a7d",
+  measurementId: "G-T78HJDVBZB"
+};
 
-    <!-- TEKST TESTOWY -->
-    <p>.</p>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+</script>
 
-    <p>w przyszłości</p>
-    
-    <img src="e
-        Ender1.jpg" alt="Ender" width="300">
-    
-
-</div>
-<fotel> jak jakiś bląd to pisać na tiktoku elektroantek</fotel>
 </body>
 </html>
